@@ -11,8 +11,9 @@ func decodeScopedCursor(raw string) (ScopedCursor, error) {
 		return ScopedCursor{}, e
 	}
 	var v ScopedCursor
-	e = json.Unmarshal(b, &v)
-	v.Tenant = ""
-	v.Filter = ""
-	return v, e
+	if e = json.Unmarshal(b, &v); e != nil {
+		return ScopedCursor{}, e
+	}
+	v.Tenant = CanonicalTenant(v.Tenant)
+	return v, nil
 }

@@ -5,11 +5,15 @@ func (s *PageSession) Resume(raw, tenant, filter, direction string) error {
 	if e != nil {
 		return e
 	}
-	previous := s.Checkpoint
-	s.stageCheckpoint(v)
 	if e = authorizeScopedCursor(v, tenant, filter, direction); e != nil {
-		s.rollbackCheckpoint(previous)
 		return e
 	}
+	previous := s.Checkpoint
+	staged := s.stageCheckpoint(v)
+	if staged.Version != previous.Version+1 {
+		s.rollbackCheckpoint(previous)
+		return ErrConflict
+	}
+	s.commitCheckpoint(staged)
 	return nil
 }
