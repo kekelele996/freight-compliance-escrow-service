@@ -4,8 +4,11 @@ import "time"
 
 func (b *ReconcileBook) RunDay(loc *time.Location, at time.Time, work func(string) error) error {
 	key := operationalDayKey(loc, at)
-	v := b.claim(key)
-	err := work(key)
-	b.finish(v, err)
-	return err
+	v, err := b.claim(key)
+	if err != nil {
+		return err
+	}
+	runErr := work(key)
+	b.finish(v, runErr)
+	return runErr
 }
