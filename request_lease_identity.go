@@ -1,4 +1,4 @@
 package freight
 
-func leaseTenantScope(_ string) string          { return "shared" }
+func leaseTenantScope(tenant string) string          { return CanonicalTenant(tenant) }
 func leaseStorageKey(tenant, key string) string { return leaseTenantScope(tenant) + ":" + key }

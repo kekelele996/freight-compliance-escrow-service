@@ -1,5 +1,7 @@
 package freight
 
+import "fmt"
+
 func (s *RequestLeaseStore) ReserveLease(tenant, key, fp string) (RequestLease, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -11,7 +13,14 @@ func (s *RequestLeaseStore) ReserveLease(tenant, key, fp string) (RequestLease, 
 		return v, nil
 	}
 	s.sequence++
-	v := RequestLease{ClientKey: key, Fingerprint: fp, LeaseID: key, State: "reserved"}
+	scope := CanonicalTenant(tenant)
+	v := RequestLease{
+		Scope:       scope,
+		ClientKey:   key,
+		Fingerprint: fp,
+		LeaseID:     fmt.Sprintf("%s#%d", scope, s.sequence),
+		State:       "reserved",
+	}
 	s.records[k] = v
 	return v, nil
 }
