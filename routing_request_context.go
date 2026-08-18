@@ -2,4 +2,9 @@ package freight
 
 import "context"
 
-func routingContext(_ context.Context) context.Context { return context.Background() }
+func routingContext(parent context.Context) context.Context {
+	if parent == nil {
+		return context.Background()
+	}
+	return parent
+}
