@@ -5,11 +5,9 @@ func (q *DeliveryQueue) PublishOne(id string, send func(string) error) error {
 	if err != nil {
 		return err
 	}
-	if err = invokeDeliverySend(v, send); err != nil {
-		return err
-	}
-	q.finish(id, nil)
-	return nil
+	sendErr := invokeDeliverySend(v, send)
+	q.finish(id, sendErr)
+	return sendErr
 }
 func (q *DeliveryQueue) PendingIDs() []string {
 	q.mu.Lock()

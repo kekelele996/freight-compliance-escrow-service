@@ -6,7 +6,10 @@ func (q *DeliveryQueue) finish(id string, sendErr error) {
 	v := q.records[id]
 	if sendErr != nil {
 		v.LastError = sendErr.Error()
+		v.State = "pending"
+	} else {
+		v.LastError = ""
+		v.State = "published"
 	}
-	v.State = "published"
 	q.records[id] = v
 }

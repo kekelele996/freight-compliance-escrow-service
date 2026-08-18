@@ -7,7 +7,10 @@ func (q *DeliveryQueue) claim(id string) (DeliveryRecord, error) {
 	if !ok {
 		return DeliveryRecord{}, ErrNotFound
 	}
-	v.State = "published"
+	if v.State != "pending" {
+		return DeliveryRecord{}, ErrConflict
+	}
+	v.State = "inflight"
 	v.Attempts++
 	q.records[id] = v
 	return v, nil
