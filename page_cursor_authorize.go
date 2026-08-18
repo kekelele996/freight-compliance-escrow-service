@@ -1,3 +1,14 @@
 package freight
 
-func authorizeScopedCursor(_ ScopedCursor, _ string, _ string, _ string) error { return nil }
+func authorizeScopedCursor(v ScopedCursor, tenant, filter, direction string) error {
+	if CanonicalTenant(v.Tenant) != CanonicalTenant(tenant) {
+		return ErrValidation
+	}
+	if v.Filter != filter {
+		return ErrValidation
+	}
+	if v.Direction != direction {
+		return ErrValidation
+	}
+	return nil
+}

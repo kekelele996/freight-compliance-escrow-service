@@ -8,11 +8,11 @@ import (
 func decodeScopedCursor(raw string) (ScopedCursor, error) {
 	b, e := base64.RawURLEncoding.DecodeString(raw)
 	if e != nil {
-		return ScopedCursor{}, e
+		return ScopedCursor{}, ErrValidation
 	}
 	var v ScopedCursor
-	e = json.Unmarshal(b, &v)
-	v.Tenant = ""
-	v.Filter = ""
-	return v, e
+	if e = json.Unmarshal(b, &v); e != nil {
+		return ScopedCursor{}, ErrValidation
+	}
+	return v, nil
 }
