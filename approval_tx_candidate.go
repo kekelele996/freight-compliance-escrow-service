@@ -1,7 +1,11 @@
 package freight
 
 func approvalCandidate(v *ApprovalRecord) *ApprovalRecord {
-	v.State = "approved"
-	v.Version++
-	return v
+	if v == nil {
+		return nil
+	}
+	out := *v
+	out.State = "approved"
+	out.Version++
+	return &out
 }
