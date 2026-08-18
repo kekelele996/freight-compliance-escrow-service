@@ -7,10 +7,13 @@ func (s ZonedSchedule) NextOpenAt(t time.Time) time.Time {
 		return t
 	}
 	local := scheduleLocal(s, t)
-	for i := 0; i < 7; i++ {
+	for i := 0; i < 14; i++ {
 		day := local.AddDate(0, 0, i)
 		if s.Weekdays[day.Weekday()] {
-			return scheduleOpeningOn(s, day)
+			c := scheduleOpeningOn(s, day)
+			if c.After(t) {
+				return c
+			}
 		}
 	}
 	return time.Time{}
