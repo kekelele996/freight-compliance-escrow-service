@@ -1,12 +1,12 @@
 package freight
 
 func buildQuoteCandidate(r QuoteRequest) *QuoteCandidate {
-	c := &QuoteCandidate{Tenant: r.Tenant, ID: r.ID, Amount: r.Weight * r.BaseRate}
-	if r.Surcharge < 0 {
+	c := &QuoteCandidate{Tenant: CanonicalTenant(r.Tenant), ID: r.ID}
+	if r.Weight < 0 || r.BaseRate < 0 || r.Surcharge < 0 {
 		c.Err = ErrInvalidAmount
 		return c
 	}
-	c.Amount += r.Surcharge
+	c.Amount = r.Weight*r.BaseRate + r.Surcharge
 	c.Complete = true
 	return c
 }

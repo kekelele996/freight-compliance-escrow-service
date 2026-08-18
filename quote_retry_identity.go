@@ -1,3 +1,3 @@
 package freight
 
-func quoteMemoKey(_ string, id string) string { return id }
+func quoteMemoKey(tenant, id string) string { return CanonicalTenant(tenant) + ":" + id }
