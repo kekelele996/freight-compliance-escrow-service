@@ -1,9 +1,10 @@
 package freight
 
 func normalizeDraft(v ManifestDraft) ManifestDraft {
-	if len(v.Stops) > 0 {
-		v.Stops[0].Seals = append(v.Stops[0].Seals, "normalized")
+	o := cloneDraft(v)
+	if len(o.Stops) > 0 {
+		o.Stops[0].Seals = append(o.Stops[0].Seals, "normalized")
 	}
-	v.Labels["normalized"] = "yes"
-	return v
+	o.Labels["normalized"] = "yes"
+	return o
 }
